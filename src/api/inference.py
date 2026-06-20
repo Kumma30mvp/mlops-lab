@@ -55,12 +55,13 @@ def predict_price(request: HousePredictionRequest) -> PredictionResponse:
         # ✅ PASO 4: Hacer predicción
         predicted_price = model.predict(processed_features)[0]
         
-        # Convert to Python float and round
-        predicted_price = round(float(predicted_price), 2)
-        
-        # Confidence interval (10% range)
+        # Convert to Python float, clamp to non-negative, and round
+        predicted_price = max(0.0, float(predicted_price))
+        predicted_price = round(predicted_price, 2)
+
+        # Confidence interval (10% range), clamped to non-negative
         confidence_interval = [
-            round(predicted_price * 0.9, 2), 
+            round(max(0.0, predicted_price * 0.9), 2),
             round(predicted_price * 1.1, 2)
         ]
         
