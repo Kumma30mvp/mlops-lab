@@ -69,14 +69,14 @@ To track experiments and model runs:
 
 ```bash
 cd deployment/mlflow
-docker compose -f mlflow-docker-compose.yml up -d
+docker compose -f docker-compose.yaml up -d
 docker compose ps
 ```
 
 > 🐧 **Using Podman?** Use this instead:
 
 ```bash
-podman compose -f mlflow-docker-compose.yml up -d
+podman compose -f docker-compose.yaml up -d
 podman compose ps
 ```
 

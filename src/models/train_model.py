@@ -33,6 +33,29 @@ def parse_args():
     return parser.parse_args()
 
 # -----------------------------
+# MLflow experiment setup
+# -----------------------------
+def set_experiment_safe(experiment_name):
+    client = MlflowClient()
+    experiment = client.get_experiment_by_name(experiment_name)
+
+    if experiment is None:
+        client.create_experiment(experiment_name)
+        logger.info(f"Created new MLflow experiment: {experiment_name}")
+    elif experiment.lifecycle_stage == "deleted":
+        try:
+            client.restore_experiment(experiment.experiment_id)
+            logger.warning(f"Restored soft-deleted experiment: {experiment_name}")
+        except Exception:
+            experiment_name = f"{experiment_name} (recreated)"
+            client.create_experiment(experiment_name)
+            logger.warning(
+                f"Could not restore deleted experiment; created '{experiment_name}' instead."
+            )
+
+    mlflow.set_experiment(experiment_name)
+
+# -----------------------------
 # Load model from config
 # -----------------------------
 def get_model_instance(name, params):
@@ -57,7 +80,7 @@ def main(args):
 
     if args.mlflow_tracking_uri:
         mlflow.set_tracking_uri(args.mlflow_tracking_uri)
-        mlflow.set_experiment(model_cfg['name'])
+        set_experiment_safe(model_cfg['name'])
 
     # Load data
     data = pd.read_csv(args.data)
