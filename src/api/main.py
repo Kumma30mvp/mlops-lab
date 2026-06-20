@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .inference import predict_price, batch_predict
-from .schemas import HousePredictionRequest, PredictionResponse
+from .schemas import HousePredictionRequest, BatchPredictionRequest, PredictionResponse
 
 # Initialize FastAPI app with metadata
 app = FastAPI(
@@ -44,5 +44,5 @@ async def predict(request: HousePredictionRequest):
 
 # Batch prediction endpoint
 @app.post("/batch-predict", response_model=list)
-async def batch_predict_endpoint(requests: list[HousePredictionRequest]):
-    return batch_predict(requests)
+async def batch_predict_endpoint(batch: BatchPredictionRequest):
+    return batch_predict(batch.requests)

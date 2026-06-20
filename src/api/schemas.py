@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Literal
 
 class HousePredictionRequest(BaseModel):
@@ -10,18 +10,49 @@ class HousePredictionRequest(BaseModel):
     condition: Literal["Poor", "Fair", "Good", "Excellent"] = Field(..., description="Condition of the house")
     price_per_sqft: float = Field(..., gt=50, lt=1000, description="Expected price per square foot in your area (e.g., 320)")
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
-                "sqft": 1527,
+                "sqft": 1380,
                 "bedrooms": 2,
-                "bathrooms": 1.5,
-                "location": "Suburb",
-                "year_built": 1956,
-                "condition": "Good",
-                "price_per_sqft": 320
+                "bathrooms": 1.0,
+                "location": "Rural",
+                "year_built": 1948,
+                "condition": "Poor",
+                "price_per_sqft": 182
             }
         }
+    )
+
+class BatchPredictionRequest(BaseModel):
+    requests: List[HousePredictionRequest] = Field(..., description="List of houses to predict prices for")
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "requests": [
+                    {
+                        "sqft": 1380,
+                        "bedrooms": 2,
+                        "bathrooms": 1.0,
+                        "location": "Rural",
+                        "year_built": 1948,
+                        "condition": "Poor",
+                        "price_per_sqft": 182
+                    },
+                    {
+                        "sqft": 1350,
+                        "bedrooms": 2,
+                        "bathrooms": 1.0,
+                        "location": "Rural",
+                        "year_built": 1947,
+                        "condition": "Poor",
+                        "price_per_sqft": 184
+                    }
+                ]
+            }
+        }
+    )
 
 class PredictionResponse(BaseModel):
     predicted_price: float = Field(..., description="Predicted house price in dollars")
@@ -29,8 +60,8 @@ class PredictionResponse(BaseModel):
     features_importance: dict = Field(default={}, description="Feature importance scores")
     prediction_time: str = Field(..., description="Timestamp of the prediction")
 
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "predicted_price": 489650.75,
                 "confidence_interval": [440685.68, 538615.82],
@@ -38,3 +69,4 @@ class PredictionResponse(BaseModel):
                 "prediction_time": "2025-07-24T12:30:45.123456"
             }
         }
+    )
