@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1782528238237
+current_stage: None
+description: null
+last_updated_timestamp: 1782528238237
+name: house_price_model
+run_id: 4a4109b5efff4cb981b25c0810c54447
+run_link: null
+source: runs:/4a4109b5efff4cb981b25c0810c54447/tuned_model
+status: READY
+status_message: null
+storage_location: runs:/4a4109b5efff4cb981b25c0810c54447/tuned_model
+user_id: null
+version: 1

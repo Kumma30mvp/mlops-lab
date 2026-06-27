@@ -40,3 +40,9 @@ dist/
 # Ignore all .pkl files (models, preprocessors, etc.)
 *.pkl
 
+.venv/
+data/processed/
+models/trained/
+logs/
+__pycache__/
+*.pyc
