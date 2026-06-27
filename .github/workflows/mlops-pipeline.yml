@@ -107,8 +107,14 @@ jobs:
 
       - name: Train model
         run: |
-          mkdir -p models/trained
-          python src/models/train_model.py --config configs/model_config.yaml --data data/processed/featured_house_data.csv --models-dir models
+          rm -rf mlruns
+          mkdir -p models/trained mlruns
+          export MLFLOW_TRACKING_URI="file://$PWD/mlruns"
+          python src/models/train_model.py \
+            --config configs/model_config.yaml \
+            --data data/processed/featured_house_data.csv \
+            --models-dir models \
+            --mlflow-tracking-uri "$MLFLOW_TRACKING_URI"
 
       - name: Upload trained model
         uses: actions/upload-artifact@v4

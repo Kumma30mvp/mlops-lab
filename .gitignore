@@ -46,3 +46,4 @@ models/trained/
 logs/
 __pycache__/
 *.pyc
+mlruns/
